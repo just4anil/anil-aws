@@ -1,1 +1,23 @@
-#Test file
+#!/bin/bash
+#
+# Install puppet
+apt-get install -y puppet
+#
+#Install apache httpd server
+apt-get install -y apache2
+/etc/init.d/apache2 start
+#
+#Create virtual host
+mkdir /var/www/candidateeval.ithaka.org
+echo '<html><head><title>Page created by Anil sadasivan</title></head><body><h1>Hello World!</h1></body></html>' > /tmp/candidateeval.ithaka.org-index.html
+cp /tmp/candidateeval.ithaka.org-index.html /var/www/candidateeval.ithaka.org/index.html
+cp /etc/apache2/sites-available/default /etc/apache2/sites-available/candidateeval.ithaka.org
+sed 's/\/var\/www/\/var\/www\/candidateeval.ithaka.org/g' /etc/apache2/sites-available/candidateeval.ithaka.org > /tmp/candidateeval.ithaka.org-1
+sed 's/ServerAdmin webmaster\@localhost/ServerAdmin webmaster\@localhost\n  ServerName candidateeval.ithaka.org/g' /tmp/candidateeval.ithaka.org-1 > /tmp/candidateeval.ithaka.org-2
+cp /tmp/candidateeval.ithaka.org-2  /etc/apache2/sites-available/candidateeval.ithaka.org
+#
+#Activate virtual host and restart apache server
+a2ensite candidateeval.ithaka.org
+/etc/init.d/apache2 reload
+
+
